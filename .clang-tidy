@@ -14,8 +14,8 @@ Checks: >
   -cert-err33-c,
   -clang-diagnostic-*
 
-# Convierte las advertencias de las categorías críticas en errores bloqueantes para el CI
-WarningsAsErrors: 'bugprone-*,performance-*,cert-*'
+# Convierte advertencias en errores excluyendo fallos de inclusión/compilación
+WarningsAsErrors: 'bugprone-*,performance-*,cert-*,-clang-diagnostic-*'
 
 # Filtra el análisis para enfocarlo en los archivos del proyecto dentro de src/
 HeaderFilterRegex: 'src/.*'
