@@ -63,13 +63,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Crear archivo version.hpp
+        shell: bash
         run: |
           mkdir -p src/core
           echo '#ifndef PULSO_VERSION_HPP' > src/core/version.hpp
           echo '#define PULSO_VERSION_HPP' >> src/core/version.hpp
           echo '#define PULSO_VERSION "0.1.0"' >> src/core/version.hpp
           echo '#endif' >> src/core/version.hpp
-        shell: bash
 
       - name: Instalar dependencias (Linux)
         if: runner.os == 'Linux'
