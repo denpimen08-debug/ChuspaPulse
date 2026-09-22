@@ -62,12 +62,19 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      # Solución 1: Crear version.hpp escribiendo el contenido directamente
+      # Solución robusta compatible con Windows, Linux y macOS
+      - name: Crear directorio src/core
+        run: cmake -E make_directory src/core
+
       - name: Crear version.hpp
         run: |
-          python3 -c "import os; os.makedirs('src/core', exist_ok=True); open('src/core/version.hpp', 'w').write('#ifndef PULSO_VERSION_HPP\n#define PULSO_VERSION_HPP\n#define PULSO_VERSION \"0.1.0\"\n#endif\n')"
+          echo #ifndef PULSO_VERSION_HPP > src/core/version.hpp
+          echo #define PULSO_VERSION_HPP >> src/core/version.hpp
+          echo #define PULSO_VERSION "0.1.0" >> src/core/version.hpp
+          echo #endif >> src/core/version.hpp
+        shell: bash
 
-      # Instalar dependencias en Linux / macOS
+      # Instalar dependencias
       - name: Instalar dependencias (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -78,9 +85,9 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install googletest sqlite3
 
-      # Solución 2: Compilar e instalar GoogleTest en Windows
       - name: Instalar GoogleTest (Windows)
         if: runner.os == 'Windows'
+        shell: bash
         run: |
           git clone https://github.com/google/googletest.git -b v1.14.0
           cmake -S googletest -B googletest/build -DCMAKE_INSTALL_PREFIX="C:/Program Files (x86)/googletest"
