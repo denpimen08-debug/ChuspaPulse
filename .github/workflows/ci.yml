@@ -99,10 +99,9 @@ jobs:
 
       - name: Run clang-tidy (Linux)
         if: runner.os == 'Linux'
-        continue-on-error: true
         run: |
           find src/ -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" \) | \
-          xargs -r clang-tidy --config-file=.clang-tidy --warnings-as-errors='' -- -std=c++17
+          xargs -r clang-tidy --config-file=.clang-tidy -- -std=c++17
 
       - name: Ejecutar tests con ctest
         continue-on-error: true
