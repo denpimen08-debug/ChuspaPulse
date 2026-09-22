@@ -62,14 +62,16 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Generar version.hpp (Todos los OS)
+      - name: Generar version.hpp
         shell: bash
         run: |
           mkdir -p src/core
-          echo '#ifndef PULSO_VERSION_HPP' > src/core/version.hpp
-          echo '#define PULSO_VERSION_HPP' >> src/core/version.hpp
-          echo '#define PULSO_VERSION "0.1.0"' >> src/core/version.hpp
-          echo '#endif' >> src/core/version.hpp
+          if [ ! -f src/core/version.hpp ]; then
+            echo "#ifndef PULSO_VERSION_HPP" > src/core/version.hpp
+            echo "#define PULSO_VERSION_HPP" >> src/core/version.hpp
+            echo '#define PULSO_VERSION "0.1.0"' >> src/core/version.hpp
+            echo "#endif" >> src/core/version.hpp
+          fi
 
       - name: Instalar dependencias (Linux)
         if: runner.os == 'Linux'
@@ -80,6 +82,10 @@ jobs:
       - name: Instalar dependencias (macOS)
         if: runner.os == 'macOS'
         run: brew install googletest sqlite3
+
+      - name: Instalar dependencias (Windows)
+        if: runner.os == 'Windows'
+        run: choco install gtest --no-progress
 
       - name: Configurar CMake con tests
         run: cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
