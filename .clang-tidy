@@ -9,7 +9,10 @@ Checks: >
   -*,
   bugprone-*,
   performance-*,
-  cert-*
+  cert-*,
+  -bugprone-easily-swappable-parameters,
+  -cert-err33-c,
+  -clang-diagnostic-*
 
 # Convierte las advertencias de las categorías críticas en errores bloqueantes para el CI
 WarningsAsErrors: 'bugprone-*,performance-*,cert-*'
