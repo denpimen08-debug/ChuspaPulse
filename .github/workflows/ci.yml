@@ -72,7 +72,7 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install googletest sqlite3
 
-      # Solución al error Cannot find source file: src/core/version.hpp
+      # Soluciona la ausencia de src/core/version.hpp antes de configurar CMake
       - name: Crear archivo version.hpp
         shell: bash
         run: |
