@@ -62,7 +62,7 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Crear version.hpp
+      - name: Generar version.hpp (Todos los OS)
         shell: bash
         run: |
           mkdir -p src/core
@@ -80,10 +80,6 @@ jobs:
       - name: Instalar dependencias (macOS)
         if: runner.os == 'macOS'
         run: brew install googletest sqlite3
-
-      - name: Instalar dependencias (Windows)
-        if: runner.os == 'Windows'
-        run: choco install googletest sqlite
 
       - name: Configurar CMake con tests
         run: cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
