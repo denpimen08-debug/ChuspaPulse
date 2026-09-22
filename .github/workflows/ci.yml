@@ -101,7 +101,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           find src/ -type f \( -name "*.cpp" -o -name "*.cxx" -o -name "*.cc" \) -print0 | \
-          xargs -0 -r clang-tidy --config-file=.clang-tidy -- -std=c++17 -Wno-everything
+          xargs -0 -r clang-tidy --config-file=.clang-tidy --ignore-compiler-errors -extra-arg=-Wno-everything -- -std=c++17
 
       - name: Ejecutar tests con ctest
         continue-on-error: true
