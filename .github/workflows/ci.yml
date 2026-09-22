@@ -62,6 +62,7 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
+      # Solución error Linux/macOS: Crear version.hpp si no existe
       - name: Generar version.hpp
         shell: bash
         run: |
@@ -83,12 +84,14 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install googletest sqlite3
 
-      - name: Instalar dependencias (Windows)
-        if: runner.os == 'Windows'
-        run: choco install gtest --no-progress
-
-      - name: Configurar CMake con tests
+      # Solución error Windows: usar CMake con FetchContent si no hay paquete system
+      - name: Configurar CMake con tests (Linux / macOS)
+        if: runner.os != 'Windows'
         run: cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Configurar CMake con tests (Windows)
+        if: runner.os == 'Windows'
+        run: cmake -S . -B build -DBUILD_TESTS=ON
 
       - name: Compilar
         run: cmake --build build
