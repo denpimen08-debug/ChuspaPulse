@@ -62,11 +62,19 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      # Generar version.hpp usando Inline Python multisistema simple
+      # Solución robusta compatible con Windows, Linux y macOS
+      - name: Crear directorio src/core
+        run: cmake -E make_directory src/core
+
       - name: Crear version.hpp
         run: |
-          python -c "import os; os.makedirs('src/core', exist_ok=True); f=open('src/core/version.hpp','w'); f.write('#ifndef PULSO_VERSION_HPP\n#define PULSO_VERSION_HPP\n#define PULSO_VERSION \"0.1.0\"\n#endif\n'); f.close()"
+          echo #ifndef PULSO_VERSION_HPP > src/core/version.hpp
+          echo #define PULSO_VERSION_HPP >> src/core/version.hpp
+          echo #define PULSO_VERSION "0.1.0" >> src/core/version.hpp
+          echo #endif >> src/core/version.hpp
+        shell: bash
 
+      # Instalar dependencias
       - name: Instalar dependencias (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -77,18 +85,17 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install googletest sqlite3
 
-      - name: Instalar GoogleTest vía vcpkg (Windows)
+      - name: Instalar GoogleTest (Windows)
         if: runner.os == 'Windows'
+        shell: bash
         run: |
-          vcpkg install gtest:x64-windows
+          git clone https://github.com/google/googletest.git -b v1.14.0
+          cmake -S googletest -B googletest/build -DCMAKE_INSTALL_PREFIX="C:/Program Files (x86)/googletest"
+          cmake --build googletest/build --config Release
+          cmake --install googletest/build
 
-      - name: Configurar CMake (Linux / macOS)
-        if: runner.os != 'Windows'
+      - name: Configurar CMake
         run: cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-      - name: Configurar CMake (Windows)
-        if: runner.os == 'Windows'
-        run: cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
 
       - name: Compilar
         run: cmake --build build
