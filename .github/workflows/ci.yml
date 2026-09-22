@@ -72,7 +72,7 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install googletest sqlite3
 
-      # Crear versión mediante bash estándar antes de la configuración
+      # Solución al error Cannot find source file: src/core/version.hpp
       - name: Crear archivo version.hpp
         shell: bash
         run: |
